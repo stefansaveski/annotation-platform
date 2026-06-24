@@ -2,6 +2,8 @@
 
 **Live demo: [labely.kodrum.dev](https://labely.kodrum.dev)**
 
+**Demo: [Watch on YouTube](https://youtu.be/Y1pSmXBwaGQ)**
+
 [![Watch demo](https://img.youtube.com/vi/Y1pSmXBwaGQ/0.jpg)](https://youtu.be/Y1pSmXBwaGQ)
 
 A full-stack platform for uploading images, running AI-powered segmentation and defect detection, reviewing annotations, and exporting labeled datasets.
