@@ -1,0 +1,26 @@
+# Core SAM3 dependencies
+torch>=2.7.0
+torchvision
+timm>=1.0.17
+numpy>=1.26,<2
+tqdm
+einops
+decord
+ftfy==6.1.1
+regex
+iopath>=0.1.10
+typing_extensions
+huggingface_hub
+
+# Image / video processing
+Pillow
+opencv-python
+pycocotools
+scikit-image
+scikit-learn
+scipy
+
+# API server
+fastapi
+uvicorn[standard]
+python-multipart

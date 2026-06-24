@@ -1,0 +1,71 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/share/boost
+          sudo apt-get clean
+          df -h
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME_LC=${IMAGE_NAME,,}" >> $GITHUB_ENV
+        env:
+          IMAGE_NAME: ${{ github.repository }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download SAM3 weights
+        run: |
+          pip install "huggingface_hub[cli]"
+          mkdir -p weights
+          hf download facebook/sam3 sam3.pt --local-dir ./weights --token ${{ secrets.HF_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          build-contexts: |
+            weights=./weights
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:cache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:cache,mode=max

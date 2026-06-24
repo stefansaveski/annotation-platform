@@ -1,0 +1,49 @@
+# Nested git repo internals (kept as .git_save during monorepo init)
+**/.git_save/
+
+# GitHub modernization tooling
+.github/modernize/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Model weights
+*.pt
+*.pth
+*.safetensors
+*.bin
+*.ckpt
+weights/
+checkpoints/
+sam3-weights/
+
+# Node
+node_modules/
+.next/
+/build
+/.pnp
+.pnp.*
+
+# Java/Maven
+target/
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
